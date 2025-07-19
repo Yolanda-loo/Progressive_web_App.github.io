@@ -1,6 +1,6 @@
 {
-    "name": "Todo List PWA",
-    "short_name": "Todo PWA",
+    "name": "Todo List ",
+    "short_name": "Todo ",
     "description": "A simple todo list progressive web app",
     "start_url": "/index.html",
     "display": "standalone",
