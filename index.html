@@ -3,25 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List PWA</title>
+    <title>My Diary Todos</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Handwritten Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#8b5cf6">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" href="/icon.png">
+    <style>
+        body {
+            background-image: url('https://www.transparenttextures.com/patterns/notebook.png');
+            background-color: #f5f3ff;
+            background-size: 350px;
+            font-family: 'Caveat', cursive;
+        }
+        .diary-container {
+            background: linear-gradient(to bottom, #faf5ff, #ede9fe);
+            border: 3px solid #a78bfa;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .diary-container::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #8b5cf6;
+            box-shadow: -3px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .diary-container::after {
+            content: '✿';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 32px;
+            color: #8b5cf6;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="container mx-auto p-4 max-w-md">
-        <h1 class="text-3xl font-bold text-center text-indigo-600 mb-6">Todo List</h1>
-        <div id="errorMessage" class="hidden bg-red-100 text-red-700 p-2 rounded-md mb-4"></div>
-        <div class="mb-4">
-            <input id="todoInput" type="text" placeholder="Add a new task" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <button id="addTodo" class="mt-2 w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700">Add Task</button>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-6 sm:p-8 max-w-lg diary-container rounded-xl">
+        <h1 class="text-4xl sm:text-5xl font-bold text-center text-purple-600 mb-4" style="font-family: 'Reenie Beanie', cursive;">My Diary Todos</h1>
+        <div class="text-center text-purple-500 mb-6 text-lg sm:text-xl italic">You're doing amazing, keep shining! 🌟</div>
+        <div class="text-center text-purple-500 mb-6 text-lg sm:text-xl">✿ {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })} ✿</div>
+        <div id="errorMessage" class="hidden bg-purple-100 text-purple-700 p-3 rounded-lg mb-6 border border-purple-300 text-lg sm:text-xl"></div>
+        <div class="mb-6">
+            <input id="todoInput" type="text" placeholder="Dear Diary, today I need to..." class="w-full p-3 border border-purple-300 rounded-lg bg-purple-50 placeholder-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400 text-lg sm:text-xl" style="font-family: 'Caveat', cursive;">
+            <button id="addTodo" class="mt-3 w-full bg-purple-500 text-white p-3 rounded-lg hover:bg-purple-600 transition duration-300 text-lg sm:text-xl">Add to Diary 🌸</button>
         </div>
-        <div id="offlineMessage" class="hidden bg-yellow-100 text-yellow-700 p-2 rounded-md mb-4">You are offline. Some features may be limited.</div>
-        <ul id="todoList" class="space-y-2"></ul>
-        <button id="subscribePush" class="mt-4 w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Enable Notifications</button>
+        <div id="offlineMessage" class="hidden bg-yellow-100 text-yellow-700 p-3 rounded-lg mb-6 border border-yellow-300 text-lg sm:text-xl">You are offline, dear. Some features may be limited.</div>
+        <ul id="todoList" class="space-y-4"></ul>
+        <button id="subscribePush" class="mt-6 w-full bg-purple-700 text-white p-3 rounded-lg hover:bg-purple-800 transition duration-300 text-lg sm:text-xl">Enable Notifications 💜</button>
     </div>
 
     <script>
@@ -37,7 +74,7 @@
                 }
             });
         } else {
-            showError('Service Workers are not supported in this browser.');
+            showError('Service Workers are not supported in this browser, dear.');
         }
 
         // Check online status
@@ -67,7 +104,7 @@
         try {
             todos = JSON.parse(localStorage.getItem('todos')) || [];
         } catch (e) {
-            showError('Failed to load todos. Using empty list.');
+            showError('Failed to load todos, dear. Starting with a fresh page.');
         }
 
         // Render todos
@@ -76,12 +113,12 @@
                 todoList.innerHTML = '';
                 todos.forEach((todo, index) => {
                     const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center p-2 bg-white rounded-md shadow';
+                    li.className = 'flex justify-between items-center p-4 bg-purple-50 rounded-lg border border-purple-200 shadow-sm';
                     li.innerHTML = `
-                        <span class="${todo.completed ? 'line-through text-gray-500' : ''}">${todo.text}</span>
-                        <div>
-                            <button onclick="toggleTodo(${index})" class="text-green-600 mr-2">${todo.completed ? 'Undo' : 'Complete'}</button>
-                            <button onclick="deleteTodo(${index})" class="text-red-600">Delete</button>
+                        <span class="${todo.completed ? 'line-through text-purple-400' : 'text-purple-600'} text-lg sm:text-xl">${todo.text}</span>
+                        <div class="flex space-x-3">
+                            <button onclick="toggleTodo(${index})" class="text-purple-500 hover:text-purple-600 text-base sm:text-lg">${todo.completed ? 'Undo' : 'Done'} 🌷</button>
+                            <button onclick="deleteTodo(${index})" class="text-purple-500 hover:text-purple-600 text-base sm:text-lg">Erase 🗑️</button>
                         </div>
                     `;
                     todoList.appendChild(li);
@@ -96,7 +133,7 @@
         addTodoButton.addEventListener('click', () => {
             const text = todoInput.value.trim();
             if (!text) {
-                showError('Please enter a task.');
+                showError('Please write something in your diary, dear.');
                 return;
             }
             try {
@@ -104,10 +141,10 @@
                 todoInput.value = '';
                 renderTodos();
                 if (Notification.permission === 'granted') {
-                    showNotification('New Task Added', `Task "${text}" was added to your list.`);
+                    showNotification('New Diary Entry', `You added "${text}" to your diary.`);
                 }
             } catch (e) {
-                showError('Error adding todo: ' + e.message);
+                showError('Error adding to diary: ' + e.message);
             }
         });
 
@@ -117,7 +154,7 @@
                 todos[index].completed = !todos[index].completed;
                 renderTodos();
             } catch (e) {
-                showError('Error toggling todo: ' + e.message);
+                showError('Error marking todo: ' + e.message);
             }
         };
 
@@ -127,7 +164,7 @@
                 todos.splice(index, 1);
                 renderTodos();
             } catch (e) {
-                showError('Error deleting todo: ' + e.message);
+                showError('Error erasing todo: ' + e.message);
             }
         };
 
@@ -136,7 +173,7 @@
             try {
                 localStorage.setItem('todos', JSON.stringify(todos));
             } catch (e) {
-                showError('Failed to save todos: ' + e.message);
+                showError('Failed to save your diary: ' + e.message);
             }
         }
 
@@ -152,10 +189,10 @@
                             applicationServerKey: 'YOUR_PUBLIC_VAPID_KEY' // Replace with your VAPID key
                         });
                         console.log('Push subscription successful:', subscription);
-                        showNotification('Notifications Enabled', 'You will now receive todo updates.');
+                        showNotification('Notifications Enabled', 'Your diary will now send you sweet reminders.');
                         subscribeButton.classList.add('hidden');
                     } else {
-                        showError('Notification permission denied.');
+                        showError('Notification permission denied, dear.');
                     }
                 } catch (e) {
                     showError('Error setting up notifications: ' + e.message);
